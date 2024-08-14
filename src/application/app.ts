@@ -1,10 +1,26 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
+import { errorMiddleware } from "@/middleware/error-middleware";
+import { userRoute } from "@/route/user-route";
 
 export const app = express();
 
+app.use(express.json());
 app.use(cors());
 
-app.get("/v1", (req, res) => {
-  res.send("Hello, World!");
+app.use(errorMiddleware);
+
+let message = "";
+if (process.env.NODE_ENV === "development") {
+  message = "Hello from development!";
+} else if (process.env.NODE_ENV === "production") {
+  message = "Hello from production!";
+}
+
+app.use("/v1", (req: Request, res: Response) => {
+  res.status(200).send({
+    status: "success",
+    code: 200,
+    message: message,
+  });
 });
