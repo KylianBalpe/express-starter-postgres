@@ -1,37 +1,20 @@
-import {
-  RegisterRequest,
-  toUserResponse,
-  UserResponse,
-} from "@/model/user-model";
-import { Validation } from "@/validation/validation";
-import { UserValidation } from "@/validation/user-validation";
+import { User } from "@prisma/client";
+import { toUserResponse, UserResponse } from "@/model/user-model";
 import { prismaClient } from "@/application/database";
-import bcrypt from "bcrypt";
 import { ResponseError } from "@/response/response";
 
 export class UserService {
-  static async register(request: RegisterRequest): Promise<UserResponse> {
-    const registerRequest: RegisterRequest = Validation.validate(
-      UserValidation.REGISTER,
-      request,
-    );
-
-    const isEmailExist = await prismaClient.user.findUnique({
+  static async profile(user: User): Promise<UserResponse> {
+    const response = await prismaClient.user.findUnique({
       where: {
-        email: registerRequest.email,
+        id: user.id,
       },
     });
 
-    if (isEmailExist) {
-      throw new ResponseError("error", 400, "Email already exist");
+    if (!response) {
+      throw new ResponseError("error", 404, "User not found");
     }
 
-    registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
-
-    const user = await prismaClient.user.create({
-      data: registerRequest,
-    });
-
-    return toUserResponse(user);
+    return toUserResponse(response);
   }
 }

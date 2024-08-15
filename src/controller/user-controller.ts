@@ -1,20 +1,19 @@
-import { NextFunction, Request, Response } from "express";
-import { RegisterRequest } from "@/model/user-model";
+import { UserRequest } from "@/type/user-request";
+import { NextFunction, Response } from "express";
 import { UserService } from "@/service/user-service";
 import { ResponseJson } from "@/response/response";
 
 export class UserController {
-  static async register(req: Request, res: Response, next: NextFunction) {
+  static async profile(req: UserRequest, res: Response, next: NextFunction) {
     try {
-      const request: RegisterRequest = req.body as RegisterRequest;
-      const response = await UserService.register(request);
+      const response = await UserService.profile(req.user!);
       const apiResponse = new ResponseJson(
         "success",
-        201,
-        "User registered successfully",
+        200,
+        "User profile retrieved successfully",
         response,
       );
-      res.status(201).json(apiResponse.toJson());
+      res.status(200).json(apiResponse.toJson());
     } catch (e) {
       next(e);
     }

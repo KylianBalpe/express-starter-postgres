@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { errorMiddleware } from "@/middleware/error-middleware";
 import { authRoute } from "@/route/auth-route";
+import { userRoute } from "@/route/user-route";
 
 export const app = express();
 
@@ -9,6 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use(authRoute);
+app.use(userRoute);
 
 app.use(errorMiddleware);
 

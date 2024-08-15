@@ -1,5 +1,6 @@
 import express from "express";
 import { UserController } from "@/controller/user-controller";
+import { authMiddleware } from "@/middleware/auth-middleware";
 
 export const userRoute = express.Router();
-userRoute.post("/v1/user", UserController.register);
+userRoute.get("/v1/profile", authMiddleware, UserController.profile);
