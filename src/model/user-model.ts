@@ -7,6 +7,11 @@ export type UserResponse = {
   last_name?: string;
 };
 
+export type UpdateUserRequest = {
+  first_name?: string;
+  last_name?: string;
+};
+
 export const toUserResponse = (user: User): UserResponse => {
   return {
     id: user.id,

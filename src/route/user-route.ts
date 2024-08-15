@@ -4,3 +4,4 @@ import { authMiddleware } from "@/middleware/auth-middleware";
 
 export const userRoute = express.Router();
 userRoute.get("/v1/profile", authMiddleware, UserController.profile);
+userRoute.patch("/v1/profile", authMiddleware, UserController.update);
